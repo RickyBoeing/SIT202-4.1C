@@ -1,0 +1,37 @@
+#Server
+from socket import *
+
+serverPort = 11500
+serverSocket = socket(AF_INET, SOCK_STREAM)
+serverSocket.bind(('', serverPort))
+serverSocket.listen(5)
+
+print("The server is listening")
+
+while True:
+    connectCl1Socket, addr = serverSocket.accept()
+    print(f"Connection from {addr} has been established.")
+    #x = (connectCl1Socket.recv(2048).decode())
+    #print("Number of characters in received message: ", len(x))
+    #connectCl1Socket.sendto(x.encode().upper() + b" " + str(len(x)).encode(),  addr)
+    print(connectCl1Socket.recv(2048).decode())
+    connectCl1Socket.sendto(f"Hello, What's your name?".encode(), addr)
+    x = connectCl1Socket.recv(2048).decode()
+    connectCl1Socket.sendto(f"Hello ".encode() + x.encode() + f" Welcome to SIT202".encode(), addr)
+
+#client
+from socket import *
+serverName = "127.0.0.1"
+serverPort = 11500
+message = "Hello SIT202"
+
+clientSocket = socket(AF_INET, SOCK_STREAM)
+clientSocket.connect((serverName, serverPort))
+
+clientSocket.sendto(f"Hello".encode(), (serverName, serverPort))
+
+ServerReply, serverAddress = clientSocket.recvfrom(2048)
+name = "Ricky"
+clientSocket.sendto(name.encode(), (serverName, serverPort))
+print(clientSocket.recv(2048).decode())
+
